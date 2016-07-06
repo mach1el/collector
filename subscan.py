@@ -12,11 +12,12 @@ except:
 		os.system('sudo pip install tabulate')
 		print '[!] Installed termcolor and tabulate you can run this script'
 	elif os_name != 'posix':
-		print '[-] Download termcolor,tabulate and install'
+		os.system('pip install termcolor')
+		os.system('pip install tabulate')
+		print '[!] Installed termcolor and tabulate you can run this script'
 	else:
 		print '[-] You must install pip'
 import httplib
-import random
 import sys
 from argparse import ArgumentParser,RawTextHelpFormatter
 
