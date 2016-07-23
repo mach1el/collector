@@ -45,7 +45,7 @@ try:
 	from tabulate import tabulate
 except:
 	if os_name == 'posix':
-		if 'Ubuntu' or 'Mint' or 'Debian' in OS:
+		if 'Ubuntu' or 'Mint' or 'Debian' or 'Kubuntu' or 'Xubuntu' or 'Lubuntu'  in OS:
 			os.system('sudo pip install requests colorama termcolor tabulate')
 			sys.exit('[!] I have installed nessecary modules,you can run this script now')
 		elif 'Fedora' or 'Redhat' or 'CentOS' in OS:
@@ -55,7 +55,7 @@ except:
 			os.system('sudo pip install requests colorama termcolor tabulate')
 			sys.exit('[!] I have installed nessecary modules,you can run this script now')
 		else:
-			sys.exit('[!] Try to download and install all modules')
+			sys.exit('[!] Try to download and install all modules: requests,colorama,termcolor,tabulate')
 	elif os_name == 'nt':
 		os.system('c:\python27\scripts\pip.exe install requests colorama termcolor tabulate')
 		sys.exit('[!] I have installed nessecary modules,you can run this script now')
