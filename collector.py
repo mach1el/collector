@@ -342,8 +342,11 @@ class Engine:
 		e3 = re.findall(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)' + self.d,self.res)
 		e = set(e1+e2+e3)
 		tot = [x for x in e]
-		for email in tot:
-			cprint(email,'green')
+		if len(tot) == 0:
+			pass
+		else:
+			for email in tot:
+				cprint(email,'green')
 
 class Email_searcher:
 	def __init__(self,d):
@@ -351,7 +354,7 @@ class Email_searcher:
 		self.res = ''
 		self.tot_res = ''
 	def google_search(self):
-		url = 'http://www.google.com/search?num=100&start=0+&hl=en&meta=&q=%40\"'+self.d+'\"'
+		url = 'http://www.google.com/search?num=100&start=0&hl=en&meta=&q=%40\"'+self.d+'\"'
 		try:
 			r = requests.get(url,headers={'User-Agent':choice(ua())})
 		except Exception,e:
