@@ -741,12 +741,12 @@ def main():
 		epilog = '''\
 Example:
      ./%(prog)s -d example.com --getheader
-     ./%(prog)s -d google.com --subscan
-     ./%(prog)s -d apple.com --gemail --getpeople
+     ./%(prog)s -d google.com --subscan -f /path/to/wordlist
+     ./%(prog)s -d apple.com --gemail --linkedin
 ''')
 	options = parser.add_argument_group('options','')
 	options.add_argument('-d',metavar='<domain>',help='Specify target domain,it look like google.com',default=False)
-	options.add_argument('-f','--file',metavar='<file>',help='Optional to choose default wordlist or custom wordlist',default='wordlist.txt')
+	options.add_argument('-f',metavar='<file>',help='Optional to choose default wordlist or custom wordlist',default='wordlist.txt')
 	options.add_argument('--subscan',action='store_true',help='Enable subdomain scan')
 	options.add_argument('--resolver',action='store_true',help='Resolve host name')
 	options.add_argument('--lookup',action='store_true',help='Lookup Domain')
