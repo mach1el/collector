@@ -10,39 +10,70 @@ response a page which you need enter character to continue that will make script
 
 ## Usage:
 
-    USAGE: ./collector -d [domain] [OPTIONS]                                                                    
-                                                                                                            
-       _|_|_|            _|  _|                        _|                                                   
-     _|          _|_|    _|  _|    _|_|      _|_|_|  _|_|_|_|    _|_|    _|  _|_|  
-     _|        _|    _|  _|  _|  _|_|_|_|  _|          _|      _|    _|  _|_|      
-     _|        _|    _|  _|  _|  _|        _|          _|      _|    _|  _|        
-      |_|_|_|    _|_|    _|  _|    _|_|_|    _|_|_|      _|_|    _|_|    _|
+        ******            **  **                   **
+       **////**          /** /**                  /**
+      **    //   ******  /** /**  *****   *****  ******  ******  ******
+     /**        **////** /** /** **///** **///**///**/  **////**//**//*
+     /**       /**   /** /** /**/*******/**  //   /**  /**   /** /** /
+     //**    **/**   /** /** /**/**//// /**   **  /**  /**   /** /**
+      //****** //******  *** ***//******//*****   //** //****** /***
+       //////   //////  /// ///  //////  /////     //   //////  ///
+
+                           @teachyourselfhacking
 
     Author: ___T7hM1___
     Github: http://github.com/t7hm1
-    Version:2.0
-    Collector python scipt which useful to collector information.It made for information gathering
+    Version:2.7
 
-    optional arguments:
-    -h, --help            show this help message and exit
-    -v, --version         show program's version number and exit
+                Scanning -=- Gathering -=- Collecting
 
-    options:
 
-    -d <domain>           Specify target domain,it look like google.com
-    -f <file>, --file <file>
-                        Optional to choose default wordlist or custom wordlist
-    --subscan             Enable subdomain scan
-    --resolver            Resolve host name
-    --lookup              Lookup Domain
-    --whois               Whois your target
-    --gemail              Enable emails searcher
-    --gtwitter            Enable twitter searcher
-    --linkedin            Enable search people in linkedin
-    --getheader           Get a few information with headers
+    usage: ./collector.py -d [domain] [OPTIONS]
+
+    REQUIRES:
+    -d , --domain    Specify target domain,it look like google.com
+    -i , --ip        Argument for ip pinger
+
+    OPTIONAL:
+    -p , --port      Optional to choose port to traceroute or sS sU scan
+    -f , --file      Optional to choose default wordlist or custom wordlist
+    -s , --srange    Specify start range for ping module (default:0)
+    -e , --erange    Specify end range for ping module (default:256)
+    -t , --timeout   Set timeout for connectivity (default=0.5)
+    -q, --quite      quite
+    -T, --tcp        Use SYN TCP to traceroute
+
+    PORT SCAN TECHNIQUES:
+    -sC              Use socket connect() to scan ports
+    -sS              TCP SYN
+    -sF              FIN scan
+    -sA              ACK scan
+    -sX              XMAS scan
+    -sN              Null scan
+    -sU              UDP Scan
+
+    WHOIS/LOOKUP DOMAIN:
+    -lookup          Lookup Domain
+    -whois           Whois your target
+    -subscan         Enable subdomain scan
+    --zone           Check DNS zone transfer
+
+    SNSE:
+    -snse            Search user on social network such like linkedin,twitter
+
+    NETWORK GATHERING:
+    -ping            Enable ping check alive ip
+    -getheader       Get a few information with headers
+    -traceroute      Traceroute your target
+
+    HELP SCREEN:
+    -h, --help       Print help screen and exit
+    -v, --version    Print program's version and exit
 
     Example:
-      ./collector -d example.com --getheader
-      ./collector -d google.com --subscan
-      ./collector -d apple.com --gemail
-      
+    ./collector.py -i 192.168.1 -s 10 -e 100
+    ./collector.py -d example.com -getheader
+    ./collector.py -d google.com -subscan -f /path/to/worldlist
+    ./collector.py -d apple.com -gemail -linkedin
+    ./collector.py -d google.com -p 1-500 -sS
+
