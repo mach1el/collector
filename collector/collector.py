@@ -161,6 +161,8 @@ class SN_searcher:
             self.t_search()
         elif self.se == 'linkedin':
             self.l_search()
+        elif self.se == 'email':
+            self.e_search()
 
     def t_search(self):
         cprint('[+] Twitter search','yellow')
@@ -174,6 +176,11 @@ class SN_searcher:
         searcher = Lsearch.search_linkedin(self.domain,self.uagent)
         searcher.process()
 
+    def e_search(self):
+        cprint('[+] Email search','yellow')
+        cprint('================','yellow')
+        searcher = Esearch.search_email(self.domain,self.uagent)
+        searcher.process()
 
 class PingIP:
     def __init__(self,tgt,sr,er):
@@ -263,8 +270,7 @@ Example:
     options.add_argument('-subscan',action='store_true',help='Enable subdomain scan')
     options.add_argument('--zone',action='store_true',help='Check DNS zone transfer')
     options = parser.add_argument_group('SNSE')
-    options.add_argument('-snse',action='store_true',help='Search user on twitter')
-    options = parser.add_argument('-se',metavar='',help='Use search egnineer such like google,twitter,linkedin')
+    options.add_argument('-snse',metavar='',help='Search user on social network such like linkedin,twitter')
     options = parser.add_argument_group('NETWORK GATHERING')
     options.add_argument('-ping',action='store_true',help='Enable ping check alive ip')
     options.add_argument('-getheader',action='store_true',help='Get a few information with headers')
@@ -442,10 +448,7 @@ Example:
         u=ua()
         domain = args.domain
         uagent = choice(u)
-        if not args.se:
-            sys.exit(cprint('[-] You must chose search engineer such like google,linkedin,twitter'))
-        else:
-            se = args.se
+        se     = args.snse
         worker = SN_searcher(domain,uagent,se)
         worker.start()
 
@@ -480,7 +483,7 @@ Example:
         cprint('[+] Get headers','yellow')
         cprint('===============\n','yellow')
         worker = get_header(args.domain)
-        worker.res()
+        worker.print_result()
 
     if args.traceroute:
         tgt=args.domain
@@ -493,11 +496,6 @@ Example:
             cprint('==============','yellow')
             worker=traceroute(tgt,hop)
             worker.start()
-
-
-    if not (args.subscan)|(args.getheader)|(args.lookup)|(args.whois)|(args.ping)|(args.traceroute)|(args.sS)|(args.sC)|(args.sU)|(args.sF)|(args.sA)|(args.sX)|(args.sN)|(args.snse):
-        parser.print_help()
-        sys.exit(cprint('[-] You must choose some option(s)','red'))
 
 if __name__ == '__main__':
     main()

@@ -114,7 +114,7 @@ class SubScanner:
                     break
 
             print '[*] Finished scan !'
-            print 'Found {} subdomains from dictioary'.format(colored(self.count_sub,'blue'))
+            print 'Found {} subdomains from dictionary'.format(colored(self.count_sub,'blue'))
 
         except KeyboardInterrupt:
             sys.exit(cprint('[-] Canceled by user','red'))

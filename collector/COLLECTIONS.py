@@ -84,7 +84,7 @@ try:
     from Pinger import IPPinger
     from DNSLookup import lookup_dns
     from Traceroute import Traceroute
-    from SNSE import Tsearch,Lsearch
+    from SNSE import Tsearch,Lsearch,Esearch
     from SubScan import SubScan,SubWordList
     from PortScanner import xmascan,ackscan,finscan,udpscan,connscan,nullscan,stealthscan
 except ImportError,e:
