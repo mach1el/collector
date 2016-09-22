@@ -1,6 +1,6 @@
 # Collector
 
-*version 2.7 :
+* version 2.7 :
 
        add stealth scan,xmas scan,fin scan,ack scan and udp scan
        Upgrade some new feature
