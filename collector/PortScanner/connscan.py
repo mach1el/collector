@@ -126,12 +126,20 @@ class ActiveThreads(object):
 		table   = PrettyTable(['PORT','STATE','SERVICE'])
 
 		if self.single == True:
-			pool = Scanner(self.tgt,port,self.to,lock)
+			pool = Scanner(self.tgt,
+                           port,
+                           self.to,
+                           lock,
+                           self.quite)
 			pool._TCP_single()
 		else:
 			try:
 				for port in xrange(srange,erange):
-					pool = Scanner(self.tgt,port,self.to,lock,self.quite)
+					pool = Scanner(self.tgt,
+                                   port,
+                                   self.to,
+                                   lock,
+                                   self.quite)
 					t 	 = Thread(target=start_pool,args=(s,pool))
 					threads.append(t)
 
