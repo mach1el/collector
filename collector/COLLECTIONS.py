@@ -57,7 +57,7 @@ except:
             
     elif os_name == 'nt':
         try:
-            os.system('c:\python27\scripts\pip.exe install requests colorama termcolor bs4 dnspython lxml sh prettytable tabulate')
+            os.system('c:\python27\scripts\pip.exe install requests colorama termcolor bs4 dnspython lxml prettytable tabulate')
         except Exception,e:
             sys.exit(cprint(e,'red'))
     else:
@@ -65,27 +65,28 @@ except:
 
 try:
     import pcap
+    import PyQt4
 except:
     if 'Ubuntu' or 'Lubuntu' or 'Kubuntu' or 'Xubuntu' or 'Mint' or 'Debian' or 'Ubuntu-Mate' or 'Lxle' or 'Linux-Lite' or 'Tails' or 'Kali-Linux' or 'Peppermint' or 'Bodhi-Linux' or 'Netrunner' or 'Cub-Linux' or 'Ubuntu-Gnome' or 'Ubuntu-Studio' or 'Backbox' in OS:
-        os.system('sudo apt-get install python-dev python-libpcap -y')
+        os.system('sudo apt-get install python-dev python-libpcap python-qt4 -y')
         sys.exit(1)
     elif 'Fedora' or 'Redhat' or 'CentOS' in OS:
-        os.system('sudo yum install python-libpcap -y')
+        os.system('sudo yum install python-libpcap python-qt4 -y')
     elif 'Arch' or 'Manrajo' in OS:
-        os.system('sudo pacman -S python-dev python-libpcap -y')
+        os.system('sudo pacman -S python-dev python-libpcap python-qt4 -y')
         sys.exit(1)
     else:
         sys.exit('[!] Try to download and install pcap module')
         sys.exit(1)
-
 
 try:
     from pWhois import Pw
     from Pinger import IPPinger
     from DNSLookup import lookup_dns
     from Traceroute import Traceroute
-    from SNSE import Tsearch,Lsearch,Esearch
+    from EmailHunter import EmailHunter
     from SubScan import SubScan,SubWordList
+    from SNSE import Tsearch,Lsearch,Gplus
     from PortScanner import xmascan,ackscan,finscan,udpscan,connscan,nullscan,stealthscan
 except ImportError,e:
     raise ImportError(e)
