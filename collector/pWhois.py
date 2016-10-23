@@ -13,7 +13,7 @@ class Pw:
         self.jsonf                = 'http://dazzlepod.com/ip/'
         self.rdap                 = 'https://rdap.apnic.net/ip/'
         self.server_network_whois = 'whois.iana.org'
-        self.server_domain_whois  = 'whois.eurodns.com'
+        self.server_domain_whois  = 'whois.nic.it'
         self.get_json()
 
     def ip(self):
@@ -41,7 +41,7 @@ class Pw:
             cprint(e,'red')
         msg=''
         while len(msg) < 100000:
-            d=sock.recv(100)
+            d=sock.recv(4096)
             if d=='':
                 break
             msg+=d
@@ -55,7 +55,7 @@ class Pw:
         cprint(msg,'green')
 
     def Domain_whois(self):
-        cprint('[*] Whois powered by whois.eurodns.com','yellow')
+        cprint('[*] Whois powered by whois.nic.it','yellow')
         domain = self.d.replace('http://','')
         domain = self.d.replace('www.','')
         domain = self.d.replace('https://','')
@@ -69,7 +69,7 @@ class Pw:
             cprint(e,'red')
         msg=''
         while len(msg) < 100000:
-            d=sock.recv(100)
+            d=sock.recv(4096)
             if d=='':
                 break
             msg+=d
