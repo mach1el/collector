@@ -255,7 +255,6 @@ Example:
     options.add_argument('-e','--erange',metavar='',default=256,help='Specify end range for ping module (default:256)')
     options.add_argument('-t','--timeout',metavar='',default=0.5,help='Set timeout for connectivity (default=0.5)')
     options.add_argument('-q','--quite',action='store_true',help='quite')
-    options.add_argument('-T','--tcp',action='store_true',help='Use SYN TCP to traceroute')
     options = parser.add_argument_group('PORT SCAN TECHNIQUES')
     options.add_argument('-sC',action='store_true',help='Use socket connect() to scan ports')
     options.add_argument('-sS',action='store_true',help='TCP SYN')
