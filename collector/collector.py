@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding:utf-8 -*-
+
 
 from COLLECTIONS import *
 if os_name == 'nt':
