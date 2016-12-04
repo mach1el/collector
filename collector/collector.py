@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-
-from COLLECTIONS import *
+from TCG_FS import *
 if os_name == 'nt':
     colorama.init()
 sys.dont_write_bytecode=True
@@ -30,19 +29,6 @@ Version:'''+__version__+'''
 
 '''
 
-def timer():
-    if sys.platform == 'win32':
-        mytime=time.clock()
-    else:
-        mytime=time.time()
-    return mytime
-
-def check_file(f):
-    try:
-        file = open(f)
-    except IOError,e:
-        sys.exit(cprint(e,'red'))
-
 def check_target(t):
     try:
         return gethostbyname(t)
@@ -58,8 +44,66 @@ def ua():
     u.append('Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.67 Safari/537.36')
     u.append('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.67 Safari/537.36')
     u.append('Mozilla/5.0 (Windows; U; Windows NT 6.1; ko-KR) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27')
+    u.append('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')
+    u.append('Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36')
+    u.append('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0')
+    u.append('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36')
+    u.append('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.90 Safari/537.36')
     return u
 
+class Web_Crawler:
+    def __init__(self,tgt):
+        self.tgt = tgt
+        
+    def Web_Checker(self):
+        checker      = UrlChecker(self.tgt)
+        cprint('[+] Checking the protocol-relative','yellow')
+        http_status  = checker._UrlChecker__Check_http()
+        https_status = checker._UrlChecker__Check_https()
+        if http_status == 'Failed':
+            print colored('HTTP\t=> ','blue') + colored('Not Allowed','red')
+        else:
+            print colored('HTTP\t=> ','blue') + colored('Allowed','green')
+
+        if https_status == 'Failed':
+            print colored('HTTPS\t=> ','blue') + colored('Not Allowed','red')
+        else:
+            print colored('HTTPS\t=> ','blue') + colored('Allowed','green')
+
+    def Methods_test(self,method,port):
+        tester = MethodsTester(self.tgt,port)
+        if method:
+            method = method.upper()
+            if method == 'GET':
+                tester.GET()
+            elif method == 'HEAD':
+                tester.HEAD()
+            elif method == 'POST':
+                tester.POST()
+            elif method == 'PUT':
+                tester.PUT()
+            elif method == 'TRACE':
+                tester.TRACE()
+            elif method == 'DELETE':
+                tester.DELETE()
+            elif method == 'CONNECT':
+                tester.CONNECT()
+            elif method == 'OPTIONS':
+                tester.OPTIONS()
+            elif method == 'ALL':
+                try:
+                    tester.GET()
+                    tester.HEAD()
+                    tester.POST()
+                    tester.PUT()
+                    tester.TRACE()
+                    tester.DELETE()
+                    tester.CONNECT()
+                    tester.OPTIONS()
+                except KeyboardInterrupt:
+                    print ProcessCannceled('Methods Testing')
+            else:
+                print MethodError(method)
 
 class Port_Scanner:
     def __init__(self,tgt,prange,to,quite):
@@ -136,7 +180,7 @@ class Whois:
     def __init__(self,host):
         self.host = host
     def start(self):
-        worker = PW(self.host)
+        worker = Pw(self.host)
         worker.Network_whois()
         worker.Domain_whois()
 
@@ -149,7 +193,7 @@ class lookup:
         worker.some()
         worker.look_up()
         if self.zone == True:
-            print '[*] Check DNS zone transfer'
+            print colored('[*] Check DNS zone transfer','yellow')
             worker.zonetransfer()
 
 class SN_searcher:
@@ -165,6 +209,10 @@ class SN_searcher:
             self.l_search()
         elif self.se == 'email':
             self.e_search()
+        elif self.se == 'googleplus' or self.se == 'gplus':
+            self.gplus_search()
+        else:
+            sys.exit('[-] You must enter search engineer such like {}'.format(colored('twitter,linkedin,googleplus','red')))
 
     def t_search(self):
         cprint('[+] Twitter search','yellow')
@@ -178,11 +226,15 @@ class SN_searcher:
         searcher = Lsearch.search_linkedin(self.domain,self.uagent)
         searcher.process()
 
-    def e_search(self):
-        cprint('[+] Email search','yellow')
-        cprint('================','yellow')
-        searcher = Esearch.search_email(self.domain,self.uagent)
+    def gplus_search(self):
+        cprint('[+] Google plus search','yellow')
+        cprint('======================','yellow')
+        searcher = Gplus.search_gplus(self.domain,self.uagent)
         searcher.process()
+
+class Email_Hunter:
+    def __init__(self):
+        EmailHunter.Start()
 
 class PingIP:
     def __init__(self,tgt,sr,er):
@@ -211,9 +263,9 @@ class get_header:
             sys.exit(cprint('[-] Canceled by user','red'))
     def print_result(self):
         self.request()
-        code = self.r.status_code
-        reason = self.r.reason
-        mykeys = self.r.headers.keys()
+        code     = self.r.status_code
+        reason   = self.r.reason
+        mykeys   = self.r.headers.keys()
         myvalues = self.r.headers.values()
         print colored('Code: ','blue')+colored(code,'green')+'\t\t'+colored('Status: ','blue')+colored(reason,'green')
         x=0
@@ -248,37 +300,44 @@ Example:
 %(prog)s -d google.com -p 1-500 -sS
 ''')
     options = parser.add_argument_group('REQUIRES')
-    options.add_argument('-d','--domain',metavar='',help='Specify target domain,it look like google.com',default=False)
-    options.add_argument('-i','--ip',metavar='',help='Argument for ip pinger',default=False)
+    options.add_argument('-d','--domain',metavar='',help='Specify target domain,it look like google.com.',default=False)
+    options.add_argument('-i','--ip',metavar='',help='Argument for ip pinger.',default=False)
     options = parser.add_argument_group('OPTIONAL')
-    options.add_argument('-p','--port',metavar='',default=False,help='Optional to choose port to traceroute or sS sU scan')
-    options.add_argument('-f','--file',metavar='',help='Optional to choose default wordlist or custom wordlist')
-    options.add_argument('-s','--srange',metavar='',default=0,help='Specify start range for ping module (default:0)')
-    options.add_argument('-e','--erange',metavar='',default=256,help='Specify end range for ping module (default:256)')
-    options.add_argument('-t','--timeout',metavar='',default=0.5,help='Set timeout for connectivity (default=0.5)')
-    options.add_argument('-q','--quite',action='store_true',help='quite')
+    options.add_argument('-p','--port',metavar='',default=False,help='Optional to choose port to traceroute or sS sU scan.')
+    options.add_argument('-f','--file',metavar='',help='Optional to choose default wordlist or custom wordlist.')
+    options.add_argument('-s','--srange',metavar='',default=0,help='Specify start range for ping module (default:0).')
+    options.add_argument('-e','--erange',metavar='',default=256,help='Specify end range for ping module (default:256).')
+    options.add_argument('-t','--timeout',metavar='',default=0.5,help='Set timeout for connectivity (default=0.5).')
+    options.add_argument('-m','--method',metavar='',default='GET',help='Specify method to test.Default is GET method.')
+    options.add_argument('-q','--quite',action='store_true',help='quite.')
+    options = parser.add_argument_group('WEB CRAWLER')
+    options.add_argument('--url-checker',action='store_true',help='Check URL')
+    options.add_argument('--method-test',action='store_true',help='Test method status of website.')
+    options.add_argument('--scraping-links',action='store_true',help='Enable web scraping.')
     options = parser.add_argument_group('PORT SCAN TECHNIQUES')
-    options.add_argument('-sC',action='store_true',help='Use socket connect() to scan ports')
-    options.add_argument('-sS',action='store_true',help='TCP SYN')
-    options.add_argument('-sF',action='store_true',help='FIN scan')
-    options.add_argument('-sA',action='store_true',help='ACK scan')
-    options.add_argument('-sX',action='store_true',help='XMAS scan')
-    options.add_argument('-sN',action='store_true',help='Null scan')
-    options.add_argument('-sU',action='store_true',help='UDP Scan')
+    options.add_argument('-sC',action='store_true',help='Use socket connect() to scan ports.')
+    options.add_argument('-sS',action='store_true',help='TCP SYN.')
+    options.add_argument('-sF',action='store_true',help='FIN scan.')
+    options.add_argument('-sA',action='store_true',help='ACK scan.')
+    options.add_argument('-sX',action='store_true',help='XMAS scan.')
+    options.add_argument('-sN',action='store_true',help='Null scan.')
+    options.add_argument('-sU',action='store_true',help='UDP Scan.')
     options = parser.add_argument_group('WHOIS/LOOKUP DOMAIN')
-    options.add_argument('-lookup',action='store_true',help='Lookup Domain')
-    options.add_argument('-whois',action='store_true',help='Whois your target')
-    options.add_argument('-subscan',action='store_true',help='Enable subdomain scan')
-    options.add_argument('--zone',action='store_true',help='Check DNS zone transfer')
+    options.add_argument('-lookup',action='store_true',help='Lookup Domain.')
+    options.add_argument('-whois',action='store_true',help='Whois your target.')
+    options.add_argument('-subscan',action='store_true',help='Enable subdomain scan.')
+    options.add_argument('--zone',action='store_true',help='Check DNS zone transfer.')
     options = parser.add_argument_group('SNSE')
-    options.add_argument('-snse',metavar='',help='Search user on social network such like linkedin,twitter')
+    options.add_argument('-EH',action='store_true',help='Start email hunter.')
+    options.add_argument('-snse',metavar='',help='Search user on social network such like '+
+                                                 '\nlinkedin,twitter,googleplus(gplus).')
     options = parser.add_argument_group('NETWORK GATHERING')
-    options.add_argument('-ping',action='store_true',help='Enable ping check alive ip')
-    options.add_argument('-getheader',action='store_true',help='Get a few information with headers')
-    options.add_argument('-traceroute',action='store_true',help='Traceroute your target')
+    options.add_argument('-ping',action='store_true',help='Enable ping check alive ip.')
+    options.add_argument('-getheader',action='store_true',help='Get a few information with headers.')
+    options.add_argument('-traceroute',action='store_true',help='Traceroute your target.')
     options = parser.add_argument_group('HELP SCREEN')
-    options.add_argument('-h','--help',action='store_true',help='Print help screen and exit')
-    options.add_argument('-v','--version',action='store_true',help='Print program\'s version and exit')
+    options.add_argument('-h','--help',action='store_true',help='Print help screen and exit.')
+    options.add_argument('-v','--version',action='store_true',help='Print program\'s version and exit.')
     args = parser.parse_args()
     if args.help:
         sys.exit(parser.print_help())
@@ -287,13 +346,35 @@ Example:
         print __version__
         sys.exit(1)
 
-    if args.domain == False and args.ip == False:
+    if args.domain == False and args.ip == False and not args.EH:
         parser.print_help()
         sys.exit()
 
     if args.domain:
         t = args.domain
         check_target(t)
+
+    if args.url_checker:
+        target = args.domain
+        cprint('[+] Url Checker','yellow')
+        cprint('===============','yellow')
+        worker=Web_Crawler(target)
+        worker.Web_Checker()
+
+    if args.method_test:
+        target = args.domain
+        method = args.method
+        if not args.port:
+            port = 80
+        else:
+            port   = args.port
+        cprint('[+] Methods Test','yellow')
+        cprint('================','yellow')
+        worker=Web_Crawler(target)
+        worker.Methods_test(method,port)
+
+    if args.scraping_links:
+        pass
 
     if args.sC:
         if not args.quite:
@@ -306,8 +387,8 @@ Example:
             port=args.port
         target=args.domain
         to=args.timeout
-        cprint('Tcp connect scan','yellow')
-        cprint('=================','yellow')
+        cprint('[+]Tcp connect scan','yellow')
+        cprint('===================','yellow')
         worker=Port_Scanner(target,port,to,quite)
         worker.Conn_scan()
 
@@ -424,7 +505,6 @@ Example:
         worker = Whois(args.domain)
         worker.start()
 
-
     if args.subscan:
         cprint('[+] Subdomain scan','yellow')
         cprint('===================\n','yellow')
@@ -452,6 +532,9 @@ Example:
         se     = args.snse
         worker = SN_searcher(domain,uagent,se)
         worker.start()
+
+    if args.EH:
+        Email_Hunter()
 
     if args.ping:
         if not args.ip:
