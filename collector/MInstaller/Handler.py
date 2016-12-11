@@ -52,18 +52,18 @@ class Handler:
 			sys.exit('[!] Try to download modules which was required')
 
 
-	def Install_pcap_gtk(self):
+	def Install_pcap_ptqt(self):
 		check_platform = os.system('which pacman')
 		if check_platform == 0:
-			os.system('sudo pacman -S pygtk && yaourt -S pylibpcap')
+			os.system('sudo pacman -S python2-pyqt4 && yaourt -S pylibpcap')
 		else:
 			check_platform = os.system('which apt-get')
 			if check_platform == 0:
-				os.system('sudo apt-get install python-gtk2-dev python-dev python-libpcap -y')
+				os.system('sudo apt-get install python-pyqt4 python-dev python-libpcap -y')
 			else:
 				check_platform = os.system('which yum')
 				if check_platform == 0:
-					os.system('sudo yum -y install pygtk2 pylibpcap')
+					os.system('sudo yum -y install python-pyside pyside-tools PyQt4 pylibpcap')
 				else:
 					sys.exit('[!] Try to install required module on your system')
 
