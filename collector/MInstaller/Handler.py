@@ -3,7 +3,7 @@
 import os
 import sys
 from platform import platform
-sys.dont_write_byte_code=True
+sys.dont_write_bytecode=True
 
 
 class Handler:
