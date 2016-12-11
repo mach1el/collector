@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 
 from TCG_FS import *
+os_name = os.name
 if os_name == 'nt':
     colorama.init()
 sys.dont_write_bytecode=True
