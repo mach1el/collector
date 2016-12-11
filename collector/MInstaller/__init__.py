@@ -1,0 +1,2 @@
+import sys
+sys.dont_write_byte_code=True
