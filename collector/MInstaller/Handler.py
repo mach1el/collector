@@ -52,7 +52,7 @@ class Handler:
 			sys.exit('[!] Try to download modules which was required')
 
 
-	def Install_pcap_ptqt(self):
+	def Install_pcap_pyqt(self):
 		check_platform = os.system('which pacman')
 		if check_platform == 0:
 			os.system('sudo pacman -S python2-pyqt4 && yaourt -S pylibpcap')
