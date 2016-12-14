@@ -9,7 +9,7 @@ sys.dont_write_bytecode=True
 class Handler:
 	def __init__(self):
 		self.os_type = os.name
-		self.OS 	 = platform()
+		self.OS	     = platform()
 
 	def Install_Pip(self):
 		if self.os_type == "posix":
