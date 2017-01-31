@@ -8,7 +8,7 @@ if os_name == 'nt':
 sys.dont_write_bytecode=True
 
 __script__  = sys.argv[0]
-__version__ ='2.7'
+__version__ ='3.0'
 title = '''
 
         ******            **  **                   **
@@ -54,7 +54,7 @@ def ua():
 
 class Web_Crawler:
     def __init__(self,tgt):
-        self.tgt = tgt
+        self.tgt  = tgt
         
     def Web_Checker(self):
         checker      = UrlChecker(self.tgt)
@@ -164,27 +164,6 @@ class Port_Scanner:
         scanner = udpscan.ActiveUdpScan(self.tgt,self.prange,self.to)
         scanner._start()
 
-class Sub_Scan:
-    def __init__(self,hosts,quite):
-        self.hosts = hosts
-        self.quite = quite
-    def start(self):
-        if self.quite == True:
-            pass
-        else:
-            print 'IP Address'.ljust(21)+'Domain Name'
-            print '------------'.ljust(21)+'------------'
-        Scanner = SubScan.SubScanner(self.hosts,self.quite)
-        Scanner._Start_scan()
-
-class Whois:
-    def __init__(self,host):
-        self.host = host
-    def start(self):
-        worker = Pw(self.host)
-        worker.Network_whois()
-        worker.Domain_whois()
-
 class lookup:
     def __init__(self,host,zone):
         self.host = host
@@ -196,6 +175,29 @@ class lookup:
         if self.zone == True:
             print colored('[*] Check DNS zone transfer','yellow')
             worker.zonetransfer()
+
+class Whois:
+    def __init__(self,host):
+        self.host = host
+    def start(self):
+        worker = Pw(self.host)
+        worker.Network_whois()
+        worker.Domain_whois()
+
+class Sub_Scan:
+    def __init__(self,hosts,quite,wf):
+        self.hosts = hosts
+        self.quite = quite
+        self.wf    = wf
+
+    def start(self):
+        if self.quite == True:
+            pass
+        else:
+            print 'IP Address'.ljust(21)+'Domain Name'
+            print '------------'.ljust(21)+'------------'
+        Scanner = SubScan.SubScanner(self.hosts,self.quite,self.wf)
+        Scanner._Start_scan()
 
 class SN_searcher:
     def __init__(self,domain,uagent,se):
@@ -310,6 +312,7 @@ Example:
     options.add_argument('-e','--erange',metavar='',default=256,help='Specify end range for ping module (default:256).')
     options.add_argument('-t','--timeout',metavar='',default=0.5,help='Set timeout for connectivity (default=0.5).')
     options.add_argument('-m','--method',metavar='',default='GET',help='Specify method to test.Default is GET method.')
+    options.add_argument('-w','--writefile',metavar='',default=False,help='Write output to text file.')
     options.add_argument('-q','--quite',action='store_true',help='quite.')
     options = parser.add_argument_group('WEB CRAWLER')
     options.add_argument('--url-checker',action='store_true',help='Check URL')
@@ -519,11 +522,16 @@ Example:
                 word = word.strip('\t').strip('\n')
                 domain = word+'.'+args.domain
                 subs.append(domain)
-        if not args.quite:
-            quite=False
+        if not args.writefile:
+            wf = None
         else:
-            quite=True
-        worker=Sub_Scan(subs,quite)
+            wf = args.writefile
+
+        if not args.quite:
+            quite = False
+        else:
+            quite = True
+        worker=Sub_Scan(subs,quite,wf)
         worker.start()
 
     if args.snse:
