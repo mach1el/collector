@@ -4,11 +4,6 @@
 
        Add pass same host in Subscan.
 
-# Note:
-
-Because my script use google search engine so sometime google may ban your ip when you sending request to google it will
-response a page which you need enter character to continue that will make script not work.But you don't worry it will work again when your ip not be blocked
-
 ## Usage:
         ******            **  **                   **
        **////**          /** /**                  /**
