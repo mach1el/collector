@@ -1,13 +1,8 @@
 # Collector
 
-* version 2.7 :
+* version 3.0 :
 
-       add stealth scan,xmas scan,fin scan,ack scan and udp scan
-       Upgrade some new feature
-
-New upgrade from subdomain scan.This script having new features like find people in linkedin,
-find twitter user,resolve host to find any host's ip,etc.My script will be useful for collecting information that's why it being called Collector.
-
+       Add pass same host in Subscan.
 
 # Note:
 
