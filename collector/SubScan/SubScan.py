@@ -1,11 +1,14 @@
+#! -*- coding:utf-8 -*-
+
 import sys
-import curses
+import SubWordList
 from socket import *
 from threading import *
 from Queue import Queue
 from PrintProcess import ProcessBar
 from prettytable import PrettyTable
 from termcolor import colored,cprint
+from PassSameHost import PassSameHost
 
 h=Queue()
 q=Queue()
@@ -20,13 +23,16 @@ def start_pool(s,pool):
         sys.exit(cprint('[-] Canceled by user','red'))
 
 class SDS(object):
-    def __init__(self,host,lock,quite,PProcess):
+    def __init__(self,host,lock,quite,PProcess,file,skip_host):
         super(SDS,self).__init__()
-        self.host     = host
-        self.lock     = lock
-        self.quite    = quite
-        self.PProcess = PProcess
-        self.c        = 0
+        self.host      = host
+        self.lock      = lock
+        self.quite     = quite
+        self.PProcess  = PProcess
+        self.file      = file
+        self.skip_host = skip_host
+        self.sub       = []
+        self.c         = 0
 
     def scan_sub(self):
         try:
@@ -38,23 +44,49 @@ class SDS(object):
             if ipv4:
                 with self.lock:
                     self.c+=1
-                    q.put(1)
                     debug=gethostbyname_ex(self.host)
                     for alias in debug[1]:
                         try:
                             debug_ip=gethostbyname(alias)
                             if self.quite == False:
-                                print colored(debug_ip,'blue').ljust(30)+colored(alias,'green')
+                                ip,host = self.skip_host._PassSameHost__Add_to_list(debug_ip,alias)
+                                print colored(ip,'blue').ljust(30)+colored(host,'green')
                             else:
-                                h.put((debug_ip,alias))
+                                h.put((ip,host))
+
+
+                            self.sub = host.split('.')
+                            if self.sub[1] in SubWordList.mydict:
+                                q.put(1)
+                            else:
+                                pass
+
+                            if self.file != None:
+                                self.file.write(debug_ip+'\t'+alias)
+                                self.file.write('\n')
+                            else:
+                                pass
                         except:
                             pass
                     hostname=debug[0]
                     for ipaddr in debug[2]:
                         if self.quite == False:
-                            print colored(ipaddr,'cyan').ljust(30)+colored(hostname,'yellow')
+                            ip,host=self.skip_host._PassSameHost__Add_to_list(debug_ip,alias)
+                            print colored(ip,'cyan').ljust(30)+colored(host,'yellow')
                         else:
-                            h.put((ipaddr,hostname))
+                            h.put((ip,host))
+
+                        self.sub = host.split('.')
+                        if self.sub[1] in SubWordList.mydict:
+                            q.put(1)
+                        else:
+                            pass
+
+                        if self.file != None:
+                            self.file.write(debug_ip+'\t'+alias)
+                            self.file.write('\n')
+                        else:
+                            pass
                     debug.close()
         except KeyboardInterrupt:
             sys.exit(cprint('[-] Canceled by user','red'))
@@ -65,23 +97,30 @@ class SDS(object):
 
 
 class SubScanner:
-    def __init__(self,hosts,quite):
+    def __init__(self,hosts,quite,wf=None):
         self.hosts     = hosts
         self.quite     = quite
+        self.wf        = wf
         self.lock      = Lock()
         self.s         = Semaphore(100)
         self.mysubs    = []
         self.threads   = []
+        self.count_sub = 0
+        self.n         = 0
         self.__field   = ['IP Adress','Domain Name']
         self.__table   = PrettyTable(self.__field)
-        self.count_sub = 0
         self.PProcess  = ProcessBar(len(hosts))
-        self.n         = 0
+        self.skip_host = PassSameHost()
 
     def _Start_scan(self):
         try:
+            if self.wf == None:
+                file = None
+            else:
+                file = open(self.wf,'wb+')
+
             for host in self.hosts:
-                pool = SDS(host,self.lock,self.quite,self.PProcess)
+                pool = SDS(host,self.lock,self.quite,self.PProcess,file,self.skip_host)
                 t    = Thread(target=start_pool,args=(self.s,pool))
                 self.threads.append(t)
 
@@ -114,7 +153,7 @@ class SubScanner:
                     break
 
             print '[*] Finished scan !'
-            print 'Found {} subdomains from dictionary'.format(colored(self.count_sub,'blue'))
+            print 'Found {} subdomains in dictionary'.format(colored(self.count_sub,'blue'))
 
         except KeyboardInterrupt:
             sys.exit(cprint('[-] Canceled by user','red'))
