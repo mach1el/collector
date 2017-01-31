@@ -61,7 +61,7 @@
        SNSE:
               -EH                Start email hunter.
               -snse              Search user on social network such like 
-                     linkedin,twitter,googleplus(gplus).
+                                 linkedin,twitter,googleplus(gplus).
 
        NETWORK GATHERING:
               -ping              Enable ping check alive ip.
