@@ -56,21 +56,6 @@ class Web_Crawler:
     def __init__(self,tgt):
         self.tgt  = tgt
         
-    def Web_Checker(self):
-        checker      = UrlChecker(self.tgt)
-        cprint('[+] Checking the protocol-relative','yellow')
-        http_status  = checker._UrlChecker__Check_http()
-        https_status = checker._UrlChecker__Check_https()
-        if http_status == 'Failed':
-            print colored('HTTP\t=> ','blue') + colored('Not Allowed','red')
-        else:
-            print colored('HTTP\t=> ','blue') + colored('Allowed','green')
-
-        if https_status == 'Failed':
-            print colored('HTTPS\t=> ','blue') + colored('Not Allowed','red')
-        else:
-            print colored('HTTPS\t=> ','blue') + colored('Allowed','green')
-
     def Methods_test(self,method,port):
         tester = MethodsTester(self.tgt,port)
         if method:
@@ -315,7 +300,6 @@ Example:
     options.add_argument('-w','--writefile',metavar='',default=False,help='Write output to text file.')
     options.add_argument('-q','--quite',action='store_true',help='quite.')
     options = parser.add_argument_group('WEB CRAWLER')
-    options.add_argument('--url-checker',action='store_true',help='Check URL')
     options.add_argument('--method-test',action='store_true',help='Test method status of website.')
     options.add_argument('--scraping-links',action='store_true',help='Enable web scraping.')
     options = parser.add_argument_group('PORT SCAN TECHNIQUES')
@@ -357,13 +341,6 @@ Example:
     if args.domain:
         t = args.domain
         check_target(t)
-
-    if args.url_checker:
-        target = args.domain
-        cprint('[+] Url Checker','yellow')
-        cprint('===============','yellow')
-        worker=Web_Crawler(target)
-        worker.Web_Checker()
 
     if args.method_test:
         target = args.domain
