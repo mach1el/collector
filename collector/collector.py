@@ -54,7 +54,10 @@ def ua():
 
 class Web_Crawler:
     def __init__(self,tgt):
-        self.tgt  = tgt
+        self.tgt      = tgt
+        self.c        = 0
+        self.listLink = []
+        self.lHandler = LinksHandler.LinksHandler()
         
     def Methods_test(self,method,port):
         tester = MethodsTester(self.tgt,port)
@@ -90,6 +93,29 @@ class Web_Crawler:
                     print ProcessCannceled('Methods Testing')
             else:
                 print MethodError(method)
+
+    def Link_Scraping(self,wo):
+        scraper = Extractor.Extraction(self.tgt)
+        links   = scraper._find_links()
+        if links:
+            rmlinks = self.lHandler._remake_link(links)
+            self.listLink+=rmlinks
+
+        pem   = ExtractMultiLinks.Proc(rmlinks)
+        links = pem.GiveLinks()
+        self.listLink+=links
+        links = self.lHandler._pass_same_link(self.listLink)
+
+        for link in links:
+            self.c+=1
+            if wo == False:
+                print link
+
+            else:
+                wo.write(link)
+                wo.write('\n')
+        print('\n[+] Found {} links').format(colored(self.c,'yellow'))
+
 
 class Port_Scanner:
     def __init__(self,tgt,prange,to,quite):
@@ -301,7 +327,7 @@ Example:
     options.add_argument('-q','--quite',action='store_true',help='quite.')
     options = parser.add_argument_group('WEB CRAWLER')
     options.add_argument('--method-test',action='store_true',help='Test method status of website.')
-    options.add_argument('--scraping-links',action='store_true',help='Enable web scraping.')
+    options.add_argument('--links-extractor',action='store_true',help='Links Extractor.')
     options = parser.add_argument_group('PORT SCAN TECHNIQUES')
     options.add_argument('-sC',action='store_true',help='Use socket connect() to scan ports.')
     options.add_argument('-sS',action='store_true',help='TCP SYN.')
@@ -354,8 +380,16 @@ Example:
         worker=Web_Crawler(target)
         worker.Methods_test(method,port)
 
-    if args.scraping_links:
-        pass
+    if args.links_extractor:
+        target = args.domain
+        if not args.writefile:
+            file = False
+        else:
+            file = open(args.writefile,'wb+')
+        cprint('[+] Links Scraping','yellow')
+        cprint('==================','yellow')
+        worker=Web_Crawler(target)
+        worker.Link_Scraping(file)
 
     if args.sC:
         if not args.quite:
