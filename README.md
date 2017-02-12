@@ -5,6 +5,11 @@
       [+] Add pass same host in Subscan.
       
       [+] Add feature links extractor.
+      
+      
+# Required Modules
+
+* When you run this tool it will detect required modules and install it
 
 ## Usage:
         ******            **  **                   **
