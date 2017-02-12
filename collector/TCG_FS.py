@@ -18,7 +18,7 @@ from datetime import datetime
 from time import gmtime,strftime
 from MInstaller.Handler import Handler
 from argparse import ArgumentParser,RawTextHelpFormatter
-sys.dont_write_bytecode=True
+
 
 minstaller = Handler()
 minstaller.Install_Pip()
@@ -41,7 +41,6 @@ try:
     import PyQt4
 except:
     minstaller.Install_pcap_pyqt()
-    sys.exit(0)
 try:
     from pWhois import Pw
     from Pinger import IPPinger
@@ -51,9 +50,11 @@ try:
     from EmailHunter import EmailHunter
     from SNSE import Tsearch,Lsearch,Gplus
     from SubScan import SubScan,SubWordList
-    from WebCrawler.Tester.UrlChecker import UrlChecker
+    from WebCrawler.LinksExtractor import Extractor
+    from WebCrawler.LinksExtractor import LinksHandler
+    from WebCrawler.LinksExtractor import ExtractMultiLinks
     from WebCrawler.Tester.MethodsTest import MethodsTester
     from PortScanner import xmascan,ackscan,finscan,udpscan,connscan,nullscan,stealthscan
 except ImportError,e:
     raise ImportError(e)
-
+sys.dont_write_bytecode=True
