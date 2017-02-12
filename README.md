@@ -3,6 +3,7 @@
 * version 3.0 :
 
       [+] Add pass same host in Subscan.
+      
       [+] Add feature links extractor.
 
 ## Usage:
