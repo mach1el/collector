@@ -192,7 +192,9 @@ class Whois:
         self.host = host
     def start(self):
         worker = Pw(self.host)
+        cprint('[*] Network Whois record','yellow')
         worker.Network_whois()
+        cprint('[*] Domain Whois record','yellow')
         worker.Domain_whois()
 
 class Sub_Scan:
