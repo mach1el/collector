@@ -6,10 +6,24 @@
       
       [+] Add feature links extractor.
       
+      [+] Upgrade pyWhois
+      
+            * add subdomain handler.
+            
+            * add 4 network whois server.
+            
+            * also use correct domain whois server.
+      
       
 # Required Modules
 
-* When you run this tool it will detect required modules and install it
+* When you run this tool it will detect required modules and install it.
+
+# Note
+
+* My Scanner (except TCP Connect Scan) won't work in Arch,Debain and may Fedora.
+
+* Also Email Hunter may not work in some linux platform.
 
 ## Usage:
         ******            **  **                   **
