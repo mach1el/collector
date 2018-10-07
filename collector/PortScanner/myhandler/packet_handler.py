@@ -16,8 +16,8 @@ def macth_ttl():
     return 255
 
 def macth_winz():
-    if sys.platform == 'linux2':
-        return 5840
+	if sys.platform == 'linux2':
+		return 5840
     elif sys.platform == 'win32':
         return 8192
     else:
