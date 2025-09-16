@@ -1,102 +1,93 @@
-# Collector
+# Collector Tool
 
-* version 3.0 :
+**Version:** 3.1.0
 
-      [+] Add pass same host in Subscan.
-      
-      [+] Add feature links extractor.
-      
-      [+] Upgrade pyWhois
-      
-            * add subdomain handler.
-            
-            * add 4 network whois server.
-            
-            * also use correct domain whois server.
-      
-      
-# Required Modules
+A versatile, all-in-one network and web reconnaissance toolkit designed for both security professionals and developers. `collector.py` consolidates HTTP method fuzzing, link extraction, DNS and WHOIS lookups, social network enumeration (SNSE), subdomain discovery, and a suite of port-scanning techniques into a single, streamlined command-line interface.
 
-* When you run this tool it will detect required modules and install it.
+---
 
-# Note
+## Key Features
 
-* My Scanner (except TCP Connect Scan) won't work in Arch,Debain and may Fedora.
+* **HTTP Fuzzing & Link Extraction**: Test supported HTTP methods or fuzz custom ones; extract and save all discovered links from a target.
+* **DNS Lookup & Zone Transfers**: Perform standard record queries (A, AAAA, MX, NS, SOA, TXT) or attempt zone transfers when allowed.
+* **WHOIS Queries**: Retrieve registration details for domains, IPs, or networks through a unified interface.
+* **Social Network Search (SNSE)**: Enumerate user profiles across platforms like Google or Bing via the SNSE module.
+* **Subdomain Scanning**: Brute-force discover subdomains using custom wordlists with adjustable threading and verbosity.
+* **Port Scanners**:
+  * **TCP & ACK**: Detect open and filtered ports with root-level ACK scans.
+  * **SYN (Stealth)**, **FIN**, **NULL**, **XMAS**, **UDP**: Employ a variety of TCP and UDP scanning techniques for comprehensive coverage.
 
-* Also Email Hunter may not work in some linux platform.
+---
 
-## Usage:
-        ******            **  **                   **
-       **////**          /** /**                  /**
-      **    //   ******  /** /**  *****   *****  ******  ******  ******
-     /**        **////** /** /** **///** **///**///**/  **////**//**//*
-     /**       /**   /** /** /**/*******/**  //   /**  /**   /** /** /
-     //**    **/**   /** /** /**/**//// /**   **  /**  /**   /** /**
-      //****** //******  *** ***//******//*****   //** //****** /***
-       //////   //////  /// ///  //////  /////     //   //////  ///
+## Installation
 
-                           @teachyourselfhacking
+1. **Clone this repository**
 
-       Author: ___T7hM1___
-       Github: http://github.com/t7hm1
-       Version:3.0
+   ```bash
+   git clone https://github.com/your-org/collector-tool.git
+   cd collector-tool
+   ```
 
-                Scanning -=- Gathering -=- Collecting
+2. **Install dependencies**
 
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-       usage: ./collector.py -d [domain] [OPTIONS]
+3. **Ensure root privileges** (required for certain scans):
 
-       REQUIRES:
-              -d , --domain      Specify target domain,it look like google.com.
-              -i , --ip          Argument for ip pinger.
+   ```bash
+   sudo ./collector.py --help
+   ```
 
-       OPTIONAL:
-              -p , --port        Optional to choose port to traceroute or sS sU scan.
-              -f , --file        Optional to choose default wordlist or custom wordlist.
-              -s , --srange      Specify start range for ping module (default:0).
-              -e , --erange      Specify end range for ping module (default:256).
-              -t , --timeout     Set timeout for connectivity (default=0.5).
-              -m , --method      Specify method to test.Default is GET method.
-              -w , --writefile   Write output to text file.
-              -q, --quite        quite.
+---
 
-       WEB CRAWLER:
-              --method-test      Test method status of website.
-              --scraping-links   Enable web scraping.
+## Usage
 
-       PORT SCAN TECHNIQUES:
-              -sC                Use socket connect() to scan ports.
-              -sS                TCP SYN.
-              -sF                FIN scan.
-              -sA                ACK scan.
-              -sX                XMAS scan.
-              -sN                Null scan.
-              -sU                UDP Scan.
+Run `collector.py` with the desired subcommand and options. At minimum, specify a target domain/IP via `-d/--domain`.
 
-       WHOIS/LOOKUP DOMAIN:
-              -lookup            Lookup Domain.
-              -whois             Whois your target.
-              -subscan           Enable subdomain scan.
-              --zone             Check DNS zone transfer.
+```bash
+# HTTP fuzzing (all methods)
+./collector.py -d example.com crawl --method ALL
 
-       SNSE:
-              -EH                Start email hunter.
-              -snse              Search user on social network such like 
-                                 linkedin,twitter,googleplus(gplus).
+# Extract links only
+./collector.py -d example.com crawl --extract --outfile links.txt
 
-       NETWORK GATHERING:
-              -ping              Enable ping check alive ip.
-              -getheader         Get a few information with headers.
-              -traceroute        Traceroute your target.
+# Standard TCP scan (default)
+./collector.py -d 192.168.1.10 scan -p default --timeout 0.5
 
-       HELP SCREEN:
-              -h, --help         Print help screen and exit.
-              -v, --version      Print program's version and exit.
+# Root-required ACK scan
+sudo ./collector.py -d 192.168.1.10 scan -p 1-1024 --tech ack
 
-       Example:
-              ./collector.py -i 192.168.1 -s 10 -e 100
-              ./collector.py -d example.com -getheader
-              ./collector.py -d google.com -subscan -f /path/to/worldlist
-              ./collector.py -d apple.com -gemail -linkedin
-              ./collector.py -d google.com -p 1-500 -sS
+# Subdomain brute-force with custom wordlist
+./collector.py -d example.com subscan --wordlist common-subdomains.txt
 
+# DNS lookup for MX and TXT records
+./collector.py -d example.com dns -t MX -t TXT
+
+# WHOIS lookup for domain and network
+./collector.py -d example.com whois --dom --net
+
+# Social network enumeration on Bing
+./collector.py -d target.com snse --engine bing
+```
+
+---
+
+## Configuration & Customization
+
+* **User Agents**: Modify `USER_AGENTS` in the script to add or rotate through different headers.
+* **Threading**: Adjust `--threads` to control concurrency for scans and enumeration.
+* **Timeouts**: Fine-tune `--timeout` for responsiveness versus thoroughness.
+
+---
+
+## Contributing
+
+Please submit issues or pull requests via GitHub. Adhere to the existing 2-space indentation, add unit tests for new modules, and update this README with any new features or flags.
+
+---
+
+## License
+
+GPL License. See [LICENSE](LICENSE) for details.

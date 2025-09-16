@@ -1,0 +1,7 @@
+requests
+colorama
+beautifulsoup4
+dnspython
+tabulate
+termcolor
+python-libpcap
